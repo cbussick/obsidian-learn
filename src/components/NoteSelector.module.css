@@ -1,0 +1,65 @@
+.wrapper {
+  display: flex;
+  gap: 32px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 0 0 calc(50% - 16px);
+  min-width: 0;
+}
+
+.columnHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.columnHeader input {
+  font-family: inherit;
+}
+
+.columnHeader label {
+  font-size: var(--h3-size);
+  font-weight: var(--h3-weight);
+}
+
+.list {
+  height: 400px;
+  overflow: auto;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+}
+
+.row {
+  padding: 0 8px;
+  line-height: 32px;
+  cursor: pointer;
+  display: flex;
+  gap: 4px;
+}
+
+.row:hover {
+  background: var(--background-modifier-hover);
+}
+
+.row:hover .rowActionButton {
+  display: flex;
+}
+
+.rowActionButton {
+  align-items: center;
+  display: none;
+}
+
+.rowLabel {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rowSelected {
+  color: var(--color-accent);
+}
