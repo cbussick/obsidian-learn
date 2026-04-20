@@ -1,12 +1,12 @@
-import { App, PluginSettingTab, Setting } from "obsidian";
+import { App, PluginSettingTab, SecretComponent, Setting } from "obsidian";
 import Learn from "./main";
 
 export interface LearnSettings {
-	openAIKey: string;
+	openAIKeyName: string;
 }
 
 export const DEFAULT_SETTINGS: LearnSettings = {
-	openAIKey: 'default'
+	openAIKeyName: "",
 }
 
 export class LearnSettingTab extends PluginSettingTab {
@@ -18,18 +18,17 @@ export class LearnSettingTab extends PluginSettingTab {
 	}
 
 	display(): void {
-		const {containerEl} = this;
+		const { containerEl } = this;
 
 		containerEl.empty();
 
 		new Setting(containerEl)
-			.setName('OpenAI API key.')
-			.setDesc('Your OpenAI API key.')
-			.addText(text => text
-				.setPlaceholder('Enter your API key')
-				.setValue(this.plugin.settings.openAIKey)
+			.setName("OpenAI API key")
+			.setDesc("Select or create a secret for your OpenAI API key.")
+			.addComponent(el => new SecretComponent(this.app, el)
+				.setValue(this.plugin.settings.openAIKeyName)
 				.onChange(async (value) => {
-					this.plugin.settings.openAIKey = value;
+					this.plugin.settings.openAIKeyName = value;
 					await this.plugin.saveSettings();
 				}));
 	}

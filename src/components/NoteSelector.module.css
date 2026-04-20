@@ -39,6 +39,11 @@
   cursor: pointer;
   display: flex;
   gap: 4px;
+
+  &.selectionList {
+    display: flex;
+    gap: 4px;
+  }
 }
 
 .row:hover {
@@ -63,3 +68,21 @@
 .rowSelected {
   color: var(--color-accent);
 }
+
+.addIcon {
+  width: 1.2em;
+  height: 1.2em;
+  stroke: var(--color-green);
+}
+
+.removeIcon {
+  width: 1.2em;
+  height: 1.2em;
+  stroke: var(--color-red);
+}
+
+.startIconSvg {
+  width: 1.3em;
+  height: 1.3em;
+}
+

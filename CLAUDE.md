@@ -23,7 +23,7 @@ This is an Obsidian community plugin. The build pipeline is:
 - `obsidian`, `electron`, all CodeMirror/Lezer packages, and Node built-ins are marked external (not bundled).
 - Everything else (including React) **is** bundled into `main.js`.
 - `tsconfig.json` sets `"baseUrl": "src"`, so imports like `import { X } from "components/Foo"` resolve to `src/components/Foo`.
-- JSX is compiled via `react-jsx` transform — `.tsx` files must be listed explicitly in `tsconfig.json`'s `include` array.
+- JSX is compiled via `react-jsx` transform. `tsconfig.json` uses `"include": ["src/**/*.ts", "src/**/*.tsx"]` so new files are picked up automatically.
 
 **Source layout:**
 - `src/main.ts` — Plugin entry point. Registers commands, settings tab, and lifecycle hooks.
@@ -34,6 +34,14 @@ This is an Obsidian community plugin. The build pipeline is:
 **React integration pattern:** The plugin embeds React only inside Obsidian modals/views. The modal constructor calls `createRoot(this.contentEl).render(<ExerciseWrapper />)`. All interactive UI lives in React components under `src/components/`.
 
 **Settings:** `LearnSettings` currently holds one field: `openAIKey`. Settings are loaded in `onload` via `this.loadData()` and saved via `this.saveSettings()`.
+
+## CSS modules
+
+All component styles use CSS Modules (`.module.css` files). Each component has its own module file.
+
+- Never use inline `style={{}}` props for anything that can be expressed as a CSS class — put it in the component's module file instead.
+- `styles.css` at the repo root is compiled output (esbuild concatenates all `.module.css` files into it). Never edit it directly.
+- Reusable UI primitives (e.g. `Spinner`, `IconButton`) live in `src/components/` with their own module file.
 
 ## Coding conventions
 

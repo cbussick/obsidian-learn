@@ -1,3 +1,5 @@
+import styles from "./NoteSelector.module.css";
+
 export const RemoveIcon = () => {
   return (
     <svg
@@ -7,11 +9,7 @@ export const RemoveIcon = () => {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      style={{
-        width: "1.2em",
-        height: "1.2em",
-        stroke: "var(--color-red)",
-      }}
+      className={styles.removeIcon}
     >
       <circle cx="12" cy="12" r="10" />
       <path d="m15 9-6 6" />

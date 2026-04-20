@@ -1,3 +1,5 @@
+import styles from "./NoteSelector.module.css";
+
 export const AddIcon = () => {
   return (
     <svg
@@ -7,11 +9,7 @@ export const AddIcon = () => {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      style={{
-        width: "1.2em",
-        height: "1.2em",
-        stroke: "var(--color-green)",
-      }}
+      className={styles.addIcon}
     >
       <circle cx="12" cy="12" r="10" />
       <path d="M8 12h8" />

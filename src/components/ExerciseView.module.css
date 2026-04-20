@@ -1,0 +1,20 @@
+.footerBar {
+  display: flex;
+  gap: 6px;
+  justify-content: space-between;
+}
+
+button.quitButton {
+  background-color: var(--color-red);
+  color: var(--text-on-accent);
+}
+
+.footerRightButtonGroup {
+  display: flex;
+  gap: 6px;
+}
+
+.hr {
+  margin: 16px 0;
+}
+

@@ -1,0 +1,24 @@
+.optionsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+button.button {
+  padding: 20px 10px;
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  height: auto;
+}
+
+button.buttonCorrect {
+  background-color: var(--color-green);
+  color: var(--text-on-accent);
+}
+
+button.buttonIncorrect {
+  background-color: var(--color-red);
+  color: var(--text-on-accent);
+}

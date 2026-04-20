@@ -1,16 +1,24 @@
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { TFile } from "obsidian";
+import { fetchOpenAIResponseExercises } from "fetchOpenAIResponse";
+import { App, Notice, TFile } from "obsidian";
 import { useMemo, useRef, useState } from "react";
+import { Exercise } from "schema/Exercise";
+import { LearnSettings } from "settings";
 import { AddIcon } from "./AddIcon";
+import { IconButton } from "./IconButton";
 import styles from "./NoteSelector.module.css";
 import { RemoveIcon } from "./RemoveIcon";
+import { RocketIcon } from "./RocketIcon";
+import { Spinner } from "./Spinner";
 
 interface NoteSelectorProps {
   allNotes: TFile[];
   selectedNotes: TFile[];
   onSelect: (note: TFile) => void;
   onDeselect: (note: TFile) => void;
-  onStart: () => void;
+  onStart: (exercises: Exercise[]) => void;
+  app: App;
+  settings: LearnSettings;
 }
 
 const NOTE_SEARCH_INPUT_ID = "note-search";
@@ -21,6 +29,8 @@ export const NoteSelector = ({
   onSelect,
   onDeselect,
   onStart,
+  app,
+  settings,
 }: NoteSelectorProps) => {
   const parentRef = useRef<HTMLDivElement>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -44,6 +54,25 @@ export const NoteSelector = ({
     estimateSize: () => 32,
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onStartExercises = () => {
+    const apiKey = app.secretStorage.getSecret(settings.openAIKeyName);
+    if (!apiKey) {
+      new Notice("No OpenAI API key set.");
+      return;
+    }
+
+    setIsLoading(true);
+    fetchOpenAIResponseExercises(apiKey, selectedNotes, app)
+      .then((result) => onStart(result))
+      .catch((error: Error) => {
+        new Notice(error.message);
+        console.error(error.message);
+      })
+      .finally(() => setIsLoading(false));
+  };
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.column}>
@@ -54,6 +83,7 @@ export const NoteSelector = ({
             type="text"
             placeholder="Search for a note..."
             onChange={(e) => setSearchQuery(e.target.value)}
+            disabled={isLoading}
           />
         </div>
         <div ref={parentRef} className={styles.list}>
@@ -82,7 +112,8 @@ export const NoteSelector = ({
                   }}
                   title={note.path}
                   onClick={() =>
-                    isSelected ? onDeselect(note) : onSelect(note)
+                    !isLoading &&
+                    (isSelected ? onDeselect(note) : onSelect(note))
                   }
                 >
                   <span className={styles.rowLabel}>{note.path}</span>
@@ -109,65 +140,27 @@ export const NoteSelector = ({
           {selectedNotes.map((note) => (
             <div
               key={note.path}
-              className={`${styles.row} ${styles.rowSelected}`}
+              className={`${styles.row} ${styles.rowSelected} ${styles.selectionList}`}
               title={note.path}
-              onClick={() => onDeselect(note)}
-              style={{
-                display: "flex",
-                gap: "4px",
-              }}
+              onClick={() => !isLoading && onDeselect(note)}
             >
               <span className={styles.rowLabel}>{note.path}</span>
 
               <span className={styles.rowActionButton}>
-                {selectedNotes.includes(note) ? (
-                  <RemoveIcon />
-                ) : (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    style={{
-                      width: "1.2em",
-                      height: "1.2em",
-                      stroke: "var(--color-green)",
-                    }}
-                  >
-                    <circle cx="12" cy="12" r="10" />
-                    <path d="M8 12h8" />
-                    <path d="M12 8v8" />
-                  </svg>
-                )}
+                {selectedNotes.includes(note) ? <RemoveIcon /> : <AddIcon />}
               </span>
             </div>
           ))}
         </div>
         <button
           className="mod-cta"
-          disabled={selectedNotes.length === 0}
-          onClick={onStart}
+          disabled={selectedNotes.length === 0 || isLoading}
+          onClick={onStartExercises}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-            <p>Start</p>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              style={{ width: "1.3em", height: "1.3em" }}
-            >
-              <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
-              <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09" />
-              <path d="M9 12a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2z" />
-              <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 .05 5 .05" />
-            </svg>
-          </div>
+          <IconButton
+            label="Start"
+            icon={isLoading ? <Spinner /> : <RocketIcon />}
+          />
         </button>
       </div>
     </div>
