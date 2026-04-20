@@ -1,7 +1,7 @@
-import React, { useState } from "react";
 import { App, Notice } from "obsidian";
-import { Exercise, ExerciseType } from "schema/Exercise";
+import React, { useState } from "react";
 import { saveExercise } from "saveExercise";
+import { Exercise, ExerciseType } from "schema/Exercise";
 import styles from "./ExerciseView.module.css";
 import { MultipleChoiceExercise } from "./MultipleChoiceExercise";
 import { SingleChoiceExercise } from "./SingleChoiceExercise";
@@ -56,6 +56,7 @@ export const ExerciseView = ({
         exercise={currentExercise}
         onFinishExercise={() => setFinished(true)}
         isFinished={isFinished}
+        key={currentExercise.id}
       />
 
       <hr className={styles.hr} />
@@ -69,9 +70,7 @@ export const ExerciseView = ({
           <button onClick={onMoveToNextExercise} disabled={isFinished}>
             Skip
           </button>
-          <button onClick={handleSave}>
-            Save
-          </button>
+          <button onClick={handleSave}>Save</button>
           <button onClick={onMoveToNextExercise} disabled={!isFinished}>
             Next
           </button>

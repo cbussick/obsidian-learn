@@ -1,4 +1,4 @@
-import { fetchOpenAIResponseExercisesAll } from "fetchOpenAIResponseAuto";
+import { fetchOpenAIResponseExercisesAll } from "fetchOpenAIResponseAll";
 import { App, Notice, TFile } from "obsidian";
 import { useEffect, useMemo, useState } from "react";
 import { Exercise } from "schema/Exercise";
